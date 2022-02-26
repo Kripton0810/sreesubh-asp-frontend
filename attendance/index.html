@@ -26,10 +26,15 @@
         flex-direction: row;
         align-items: center;
       }
+
+      canvas {
+        width: 100% !important;
+        height: 400px !important;
+      }
     </style>
   </head>
 
-  <body>
+  <body onload="getData()">
     <header class="d-flex align-items-center justify-content-between">
       <nav class="navbar navbar-light bg-light d-flex flex-row">
         <div class="container-fluid">
@@ -230,13 +235,14 @@
           type="text"
           class="form-control w-25 text-align-center"
           name="datefilter"
+          id="startdate"
           placeholder="Select Date..."
           value=""
         />
-        <input type="time" name="" class="form-control w-25 mx-2" id="" />
+        <input type="time" name="" class="form-control w-25 mx-2" id="intime" />
         <button
           class="btn d-flex align-items-center btn-primary mx-5"
-          onclick="getData()"
+          onclick="getAttendance()"
         >
           <i class="fa fa-search" aria-hidden="true"></i>
           <span class="px-2 mx-2">Search</span>
@@ -255,13 +261,20 @@
             <th scope="col">Logout Address</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody id="emptable"></tbody>
       </table>
+      <div
+        class="chart-container"
+        style="margin: auto; position: relative; width: 100%"
+      >
+        <canvas id="myChart"></canvas>
+      </div>
     </main>
     <script
       type="text/javascript"
       src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <script
       type="text/javascript"
       src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"
@@ -298,19 +311,118 @@
           }
         );
       });
+      function getAttendance() {
+        var emp = document.getElementById("employees");
+        var startdate = document.getElementById("startdate");
+        var id = emp.value;
+        var dates = String(startdate.value);
+        var date = dates.split(" to ");
+        var data = {
+          EmployeeId: id,
+          startDate: date[0],
+          endDate: date[1],
+        };
+        console.log(document.getElementById("intime").value);
+        var settings = {
+          url: "http://localhost:63739/api/Attendance/specificAttandance",
+          method: "POST",
+          dataType: "json",
+          data: {
+            EmployeeId: id,
+            startDate: date[0],
+            endDate: date[1],
+            inTime: document.getElementById("intime").value,
+          },
+        };
+        var table = "";
+        var dateList = [];
+        var workList = [];
+        console.log(settings);
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+          response.map((item, pos) => {
+            table += `
+            <tr>
+              <th>${item.loginDate}</th>
+              <th>${item.loginTime}</th>
+              <th>${item.loginAddress}</th>
+              <th>${item.logoutTime}</th>
+              <th>${item.logoutAddress}</th>
+            </tr>
+            `;
+            dateList.push(item.loginDate);
+            workList.push(item.workTime);
+          });
+          makeChart(dateList, workList);
+          $("#emptable").html(table);
+        });
+      }
       function getData() {
         var emp = document.getElementById("employees");
-
         $.ajax({
           url: "http://localhost:63739/api/Employee/getEmployee",
           type: "get",
+          async: false,
           success: function (data) {
             var empstr = "<option selected>Open this select menu</option>";
             data.map((item, index) => {
               empstr += `<option value="${item.EmployeeId}">${item.EmployeeName}</option>`;
             });
-            console.log(empstr);
             emp.innerHTML = empstr;
+          },
+        });
+      }
+
+      var myChart;
+      function makeChart(labels, datas) {
+        console.log(labels);
+        console.log(datas);
+        console.log("datas");
+        const ctx = document.getElementById("myChart").getContext("2d");
+        var d = {
+          labels: labels,
+          datasets: [
+            {
+              type: "line",
+              label: "Working hours",
+              fill: true,
+              data: datas,
+              backgroundColor: [
+                "rgba(255, 99, 132, 0.2)",
+                "rgba(54, 162, 235, 0.2)",
+                "rgba(255, 206, 86, 0.2)",
+                "rgba(75, 192, 192, 0.2)",
+                "rgba(153, 102, 255, 0.2)",
+                "rgba(255, 159, 64, 0.2)",
+              ],
+              borderColor: [
+                "rgba(255, 99, 132, 1)",
+                "rgba(54, 162, 235, 1)",
+                "rgba(255, 206, 86, 1)",
+                "rgba(75, 192, 192, 1)",
+                "rgba(153, 102, 255, 1)",
+                "rgba(255, 159, 64, 1)",
+              ],
+              borderWidth: 1,
+            },
+          ],
+
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+          },
+        };
+        if (myChart) {
+          myChart.destroy();
+        }
+        myChart = new Chart(ctx, {
+          data: d,
+          options: {
+            scales: {
+              y: {
+                min: 0,
+              },
+            },
           },
         });
       }
