@@ -1,46 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Bootstrap Example</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
   </head>
   <body>
-    <div class="container">
-      <h3>Toast Example</h3>
-      <p>
-        In this example, we use data-autohide="false" to show the toast by
-        default. You can close it by clicking on the close (x) icon inside the
-        toast header.
-      </p>
-
-      <div
-        class="toast position-fixed"
-        style="top: 10px; left: 5px;"
-        data-autohide="true"
-      >
-        <div class="toast-header">
-          <strong class="mr-auto text-primary">Toast Header</strong>
-          <small class="text-muted">5 mins ago</small>
-          <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">
-            &times;
-          </button>
-        </div>
-        <div class="toast-body">Some text inside the toast body</div>
-      </div>
-    </div>
-
-    <script>
-      $(document).ready(function () {
-        $(".toast").toast("show");
-      });
-    </script>
+    <h1>Attendance Report from 01-01-2022 to 28-02-2022</h1>
+    <table border="1">
+      <tr>
+        <th>Employee Name</th>
+        <th>Total Present</th>
+        <th bgcolor="#42f55d">Total On Time</th>
+        <th bgcolor="#f2cd11">Total Grace Time</th>
+        <th bgcolor="#f21155">Total Late Time</th>
+      </tr>
+      <tr>
+        <th>Babli Nag</th>
+        <th>0</th>
+        <th bgcolor="#42f55d">0</th>
+        <th bgcolor="#f2cd11">0</th>
+        <th bgcolor="#f21155">0</th>
+      </tr>
+      <tr>
+        <th>Sreelekha Bhowmick</th>
+        <th>0</th>
+        <th bgcolor="#42f55d">0</th>
+        <th bgcolor="#f2cd11">0</th>
+        <th bgcolor="#f21155">0</th>
+      </tr>
+      <tr>
+        <th>R Jyoti</th>
+        <th>0</th>
+        <th bgcolor="#42f55d">0</th>
+        <th bgcolor="#f2cd11">0</th>
+        <th bgcolor="#f21155">0</th>
+      </tr>
+      <tr>
+        <th>Subhankar Bhowmick</th>
+        <th>0</th>
+        <th bgcolor="#42f55d">0</th>
+        <th bgcolor="#f2cd11">0</th>
+        <th bgcolor="#f21155">0</th>
+      </tr>
+      <tr>
+        <th>Advisory Test</th>
+        <th>0</th>
+        <th bgcolor="#42f55d">0</th>
+        <th bgcolor="#f2cd11">0</th>
+        <th bgcolor="#f21155">0</th>
+      </tr>
+      <tr>
+        <th>Service Test</th>
+        <th>0</th>
+        <th bgcolor="#42f55d">0</th>
+        <th bgcolor="#f2cd11">0</th>
+        <th bgcolor="#f21155">0</th>
+      </tr>
+      <tr>
+        <th>Megha Rajak</th>
+        <th>6</th>
+        <th bgcolor="#42f55d">3</th>
+        <th bgcolor="#f2cd11">1</th>
+        <th bgcolor="#f21155">2</th>
+      </tr>
+      <tr>
+        <th>Treesha Mohanty</th>
+        <th>2</th>
+        <th bgcolor="#42f55d">2</th>
+        <th bgcolor="#f2cd11">0</th>
+        <th bgcolor="#f21155">0</th>
+      </tr>
+      <tr>
+        <th>Krishna Kumar</th>
+        <th>0</th>
+        <th bgcolor="#42f55d">0</th>
+        <th bgcolor="#f2cd11">0</th>
+        <th bgcolor="#f21155">0</th>
+      </tr>
+      <tr>
+        <th>DPS Eastern Pvt. Ltd.</th>
+        <th>0</th>
+        <th bgcolor="#42f55d">0</th>
+        <th bgcolor="#f2cd11">0</th>
+        <th bgcolor="#f21155">0</th>
+      </tr>
+    </table>
+    <br />
+    <p>Total Sundays 9</p>
+    <p>Total Holidays days 2</p>
   </body>
 </html>

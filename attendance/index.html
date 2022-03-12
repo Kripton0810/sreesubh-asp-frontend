@@ -35,6 +35,7 @@
   </head>
 
   <body onload="getData()">
+  
     <header class="d-flex align-items-center justify-content-between">
       <nav class="navbar navbar-light bg-light d-flex flex-row">
         <div class="container-fluid">
@@ -65,11 +66,21 @@
         </div>
       </div>
       <div
-        class="offcanvas offcanvas-bottom h-50"
+        class="offcanvas offcanvas-bottom h-75"
         tabindex="-1"
         id="offcanvasBottom"
         aria-labelledby="offcanvasBottomLabel"
       >
+      
+    <div class="toast" style="position: fixed; top: 20%; left: 2%;">
+      <div class="toast-header">
+        <strong class="me-auto">Notification</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+      </div>
+      <div class="toast-body">
+        <p class="noti-message">Some text inside the toast body</p>
+      </div>
+    </div>
         <div class="offcanvas-header">
           <h5 class="offcanvas-title" id="offcanvasBottomLabel">
             <i class="fa-solid fa-gear"></i> Attendance Settings
@@ -111,7 +122,7 @@
                 aria-controls="v-pills-profile"
                 aria-selected="false"
               >
-                Make Login
+                Make Logout
               </button>
               <button
                 class="nav-link"
@@ -223,7 +234,31 @@
                 role="tabpanel"
                 aria-labelledby="v-pills-messages-tab"
               >
-                ...
+                <div class="container">
+                  <div class="row mb-2">
+                    <input
+                        type="text"
+                        class="form-control col-6 text-align-center"
+                        name="datefilter"
+                        id="dateforreport"
+                        placeholder="Select Date..."
+                        value=""
+                      />
+
+                  </div>
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="btn btn-primary w-100" onclick="sendRepAdmin()">
+                        <span class="spinner-border spinner-border-sm d-none" id="spinner" role="status" aria-hidden="true"></span>
+                        Send Report To Admin</div>
+                    </div>
+                    <div class="col-6">
+                      <div class="btn btn-danger w-100" onclick="sendRepEmp()">
+                        <span class="spinner-border spinner-border-sm d-none" id="spinner2" role="status" aria-hidden="true"></span>
+                        Send Report To Employees</div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div
                 class="tab-pane fade"
@@ -294,7 +329,7 @@
           id="employees"
           aria-label="Default select example"
         >
-          <option selected>Open this select menu</option>
+          <option selected>Select Employee</option>
         </select>
 
         <input
@@ -307,6 +342,7 @@
         />
         <input type="time" name="" class="form-control w-25 mx-2" id="intime" />
         <button
+        style="cursor: pointer;"
           class="btn d-flex align-items-center btn-primary mx-5"
           onclick="getAttendance()"
         >
@@ -336,28 +372,92 @@
         <canvas id="myChart"></canvas>
       </div>
     </main>
+  </div>
     <script
       type="text/javascript"
       src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <script
       type="text/javascript"
       src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script
       type="text/javascript"
       src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <script type="text/javascript">
+      function toastCall(msg) {
+        
+        var toastElList = [].slice.call(document.querySelectorAll(".toast"));
+        var toastList = toastElList.map(function (toastEl) {
+          return new bootstrap.Toast(toastEl);
+        });
+        document.querySelector(".noti-message").innerHTML=msg;
+        toastList.forEach((toast) => toast.show());
+      }
+      function sendRepAdmin() {
+        // 
+        var startdate = document.getElementById("dateforreport");
+        var dates = String(startdate.value);
+        var date = dates.split(" to ");
+        $("#spinner").removeClass("d-none");
+       
+        var settings = {
+          url: "http://app.sreesubh.in/api/Attendance/makeReport",
+          method: "POST",
+          data:{
+            startDate:date[0],
+            endDate:date[1]
+          }
+        };
+        $.ajax(settings).done(function (response) {    
+          $("#spinner").addClass("d-none");  
+          console.log(response);
+          toastCall(response.msg);
+        }).fail((error)=>{
+          $("#spinner").addClass("d-none");  
+          console.log(response);
+          toastCall(response.msg);
+        });
+      }
+      function sendRepEmp() {
+        // 
+        var startdate = document.getElementById("dateforreport");
+        var dates = String(startdate.value);
+        var date = dates.split(" to ");
+        $("#spinner2").removeClass("d-none");
+        var settings = {
+          url: "http://app.sreesubh.in/api/Attendance/makeReportForEmp",
+          method: "POST",
+          data:{
+            startDate:date[0],
+            endDate:date[1]
+          }
+        };
+        
+        $.ajax(settings).done(function (response) {    
+          $("#spinner2").addClass("d-none");  
+          console.log(response);
+          toastCall(response.msg);
+        }).fail((error)=>{
+          $("#spinner2").addClass("d-none");  
+          console.log(response);
+          toastCall(response.msg);
+        });
+      }
+      
       function makelogout() {
         var empid = document.getElementById("employees").value;
         var loginMakeDate = document.getElementById("logoutMakeDate").value;
         var loginMakeTime = document.getElementById("logoutMakeTime").value;
         var settings = {
-          url: "http://localhost:63739/api/Attendance/makeLogout",
-          method: "PUT",
+          url: "http://app.sreesubh.in/api/Attendance/makeLogout",
+          method: "POST",
           dataType: "json",
           data: {
             EmployeeId: empid,
@@ -365,8 +465,11 @@
             logoutTime: loginMakeTime,
           },
         };
-        $.ajax(settings).done(function (response) {
+        console.log(settings);
+        $.ajax(settings).done(function (response) {      
           console.log(response);
+    
+          toastCall(response.msg);
         });
       }
       function makelogin() {
@@ -382,8 +485,8 @@
           status = "P";
         }
         var settings = {
-          url: "http://localhost:63739/api/Attendance/makeLogin",
-          method: "PUT",
+          url: "http://app.sreesubh.in/api/Attendance/makeLogin",
+          method: "POST",
           dataType: "json",
           data: {
             EmployeeId: empid,
@@ -395,6 +498,7 @@
         };
         $.ajax(settings).done(function (response) {
           console.log(response);
+          toastCall(response.msg);
         });
       }
       $(function () {
@@ -429,29 +533,24 @@
         var id = emp.value;
         var dates = String(startdate.value);
         var date = dates.split(" to ");
-        var data = {
-          EmployeeId: id,
-          startDate: date[0],
-          endDate: date[1],
-        };
-        console.log(document.getElementById("intime").value);
-        var settings = {
-          url: "http://localhost:63739/api/Attendance/specificAttandance",
-          method: "POST",
-          dataType: "json",
-          data: {
+        console.log("Hello");
+        var data =  {
             EmployeeId: id,
             startDate: date[0],
             endDate: date[1],
-            inTime: document.getElementById("intime").value,
-          },
+          }
+        var settings = {
+          url: "http://app.sreesubh.in/api/Attendance/specificAttandanceweb",
+          method: "POST",
+          dataType: "json",
+          data: data,
+          
         };
         var table = "";
         var dateList = [];
         var workList = [];
         console.log(settings);
         $.ajax(settings).done(function (response) {
-          console.log(response);
           response.map((item, pos) => {
             table += `
             <tr>
@@ -467,16 +566,18 @@
           });
           makeChart(dateList, workList);
           $("#emptable").html(table);
+        }).fail((resp)=>{
+          console.log(resp);
         });
       }
       function getData() {
         var emp = document.getElementById("employees");
         $.ajax({
-          url: "http://localhost:63739/api/Employee/getEmployee",
+          url: "http://app.sreesubh.in/api/Employee/getEmployee",
           type: "get",
           async: false,
           success: function (data) {
-            var empstr = "<option selected>Open this select menu</option>";
+            var empstr = "<option selected>Select Employee</option>";
             data.map((item, index) => {
               empstr += `<option value="${item.EmployeeId}">${item.EmployeeName}</option>`;
             });
