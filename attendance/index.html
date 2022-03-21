@@ -361,8 +361,8 @@
           class="btn d-flex align-items-center btn-primary mx-5"
           onclick="getAttendance()"
         >
-          <i class="fa fa-search" aria-hidden="true"></i>
-          <span class="px-2 mx-2">Search</span>
+          <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+          <span class="px-2 mx-2">GO</span>
         </button>
       </div>
       <table
@@ -372,6 +372,7 @@
         <thead>
           <tr>
             <th scope="col">Date</th>
+            <th scope="col">Status</th>
             <th scope="col">Login Time</th>
             <th scope="col">Login Address</th>
             <th scope="col">Logout Time</th>
@@ -571,6 +572,7 @@
             table += `
             <tr>
               <td>${item.loginDate}</td>
+              <td>${item.status}</td>
               <td>${item.loginTime}</td>
               <td>${String(item.loginAddress).substring(0,50)+"..."}</td>
               <td>${item.logoutTime}</td>
