@@ -27,6 +27,11 @@
         align-items: center;
       }
 
+      
+      @font-face {
+        font-family: dolphin;
+        src: url(../Dolphin.ttf);
+      }
       canvas {
         width: 100% !important;
         height: 400px !important;
@@ -49,7 +54,16 @@
             >
               <i class="fas fa-bars p-2"></i>
             </div>
-            <a class="navbar-brand px-3 mx-4" href="/">Sreesubh</a>
+            <a
+              class="navbar-brand px-3 mx-4"
+              href="/"
+              style="
+                font-family: dolphin;
+                font-size: 2rem;
+                color: rgb(201, 201, 0);
+              "
+              >Sreesubh</a
+            >
           </div>
         </div>
       </nav>
@@ -66,7 +80,7 @@
         </div>
       </div>
       <div
-        class="offcanvas offcanvas-bottom h-75"
+        class="offcanvas offcanvas-bottom h-50"
         tabindex="-1"
         id="offcanvasBottom"
         aria-labelledby="offcanvasBottomLabel"
@@ -299,23 +313,24 @@
             <i class="fas fa-home"></i> Home
           </a>
           <a
-            href="/attendance/"
+            href="../attendance/"
             class="list-group-item list-group-item-action active"
             ><i class="fa fa-user-circle" aria-hidden="true"></i> Attendance</a
           >
-          <a href="/Holiday/" class="list-group-item list-group-item-action"
+          <a href="../Holiday/" class="list-group-item list-group-item-action"
             ><i class="fas fa-cloud-sun"></i> Holiday</a
           >
-          <a href="#" class="list-group-item list-group-item-action"
+          <a href="../Leavemanagement/" class="list-group-item list-group-item-action"
             ><i class="fa fa-user-circle" aria-hidden="true"></i> Leave
             request</a
           >
           <a
-            href="#"
+            href="../Report/"
             class="list-group-item list-group-item-action"
             tabindex="-1"
             aria-disabled="true"
-            ><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a
+            ><i class="fa fa-sticky-note" aria-hidden="true"></i> Get Attendance
+            Report</a
           >
         </div>
       </div>
@@ -468,7 +483,7 @@
         console.log(settings);
         $.ajax(settings).done(function (response) {      
           console.log(response);
-    
+          getAttendance();    
           toastCall(response.msg);
         });
       }
@@ -499,6 +514,7 @@
         $.ajax(settings).done(function (response) {
           console.log(response);
           toastCall(response.msg);
+          getAttendance();
         });
       }
       $(function () {
@@ -556,9 +572,9 @@
             <tr>
               <td>${item.loginDate}</td>
               <td>${item.loginTime}</td>
-              <td>${item.loginAddress}</td>
+              <td>${String(item.loginAddress).substring(0,50)+"..."}</td>
               <td>${item.logoutTime}</td>
-              <td>${item.logoutAddress}</td>
+              <td>${String(item.logoutAddress).substring(0,50)+"..."}</td>
             </tr>
             `;
             dateList.push(item.loginDate);
