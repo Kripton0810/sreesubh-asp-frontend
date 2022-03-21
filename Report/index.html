@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <title>Sreesubh</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"
+    />
+    <style>
+      @font-face {
+        font-family: dolphin;
+        src: url(../Dolphin.ttf);
+      }
+
+      .title {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar navbar-light bg-light d-flex flex-row">
+        <div class="container-fluid">
+          <div class="title">
+            <div
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasBottom"
+              aria-controls="offcanvasBottom"
+            >
+              <i class="fas fa-bars p-2"></i>
+            </div>
+            <a
+              class="navbar-brand px-3 mx-4"
+              href="/"
+              style="
+                font-family: dolphin;
+                font-size: 2rem;
+                color: rgb(201, 201, 0);
+              "
+              >Sreesubh</a
+            >
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <div
+      class="offcanvas offcanvas-start"
+      tabindex="-1"
+      id="offcanvasBottom"
+      aria-labelledby="offcanvasBottomLabel"
+    >
+      <div class="offcanvas-header">
+        Sreesubh
+        <button
+          type="button"
+          class="btn-close text-reset"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="offcanvas-body small">
+        <div class="list-group">
+          <a
+            href="../"
+            class="list-group-item list-group-item-action"
+            aria-current="true"
+          >
+            <i class="fas fa-home"></i> Home
+          </a>
+          <a
+            href="../attendance/"
+            class="list-group-item list-group-item-action"
+            ><i class="fa fa-user-circle" aria-hidden="true"></i> Attendance</a
+          >
+          <a href="../Holiday/" class="list-group-item list-group-item-action"
+            ><i class="fas fa-cloud-sun"></i> Holiday</a
+          >
+          <a
+            href="../Leavemanagement/"
+            class="list-group-item list-group-item-action"
+            ><i class="fa fa-user-circle" aria-hidden="true"></i> Leave
+            request</a
+          >
+          <a
+            href="../Report/"
+            class="list-group-item list-group-item-action active"
+            tabindex="-1"
+            aria-disabled="true"
+            ><i class="fa fa-sticky-note" aria-hidden="true"></i> Get Attendance
+            Report</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid d-flex justify-content-evenly my-2">
+      <label for="startdate" class="w-100 text-center">
+        Select Date for Report making</label
+      >
+      <input
+        type="text"
+        class="form-control w-100 text-align-center"
+        name="datefilter"
+        id="startdate"
+        placeholder="Select Date..."
+        value=""
+      />
+      <button
+        style="cursor: pointer"
+        class="btn d-flex align-items-center btn-primary mx-5"
+        onclick="getReport()"
+      >
+        <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+        <span class="px-2 mx-2">Go</span>
+      </button>
+    </div>
+    <div class="container-fluid d-flex justify-content-evenly">
+      <div class="col-6 d-flex justify-content-evenly">
+        <label class="h3" for="working">Total Working Days </label>
+        <h3 id="wdays"></h3>
+      </div>
+      <div class="col-6 d-flex justify-content-evenly">
+        <label class="h3" for="working">Total Sundays </label>
+        <h3 id="sundays"></h3>
+      </div>
+    </div>
+    <table class="table table table-hover mt-2 mx-auto" style="width: 95%">
+      <thead>
+        <tr>
+          <th scope="col">
+            <i class="fa fa-user" aria-hidden="true"></i> Employee Name
+          </th>
+          <th scope="col"><i class="fas fa-user-graduate"></i> Total Grade</th>
+          <th scope="col">
+            <i class="fa fa-percent" aria-hidden="true"></i> Total Percentage
+          </th>
+          <th scope="col">
+            <i class="fa fa-graduation-cap" aria-hidden="true"></i> On Time
+            Grade
+          </th>
+          <th scope="col">
+            <i class="fas fa-percentage"></i> On Time Percentage
+          </th>
+
+          <th scope="col"><i class="fas fa-edit"></i> Check Detials</th>
+        </tr>
+      </thead>
+      <tbody id="emptable"></tbody>
+    </table>
+
+    <div class="h4 mx-5">Holidays</div>
+    <table class="table table-dark table-hover mt-2 mx-auto" style="width: 95%">
+      <thead>
+        <tr>
+          <th scope="col"><i class="fas fa-donate"></i> Holiday Name</th>
+          <th scope="col">
+            <i class="fa fa-tree" aria-hidden="true"></i> Holiday Date
+          </th>
+        </tr>
+      </thead>
+      <tbody id="holidaytable"></tbody>
+    </table>
+
+    <div class="h4 mx-5">Leaves</div>
+    <table
+      class="table table-striped table-hover mt-2 mx-auto"
+      style="width: 95%"
+    >
+      <thead class="thead-inverse">
+        <tr>
+          <th>Employee Name</th>
+          <th>Leave Type</th>
+          <th>Description</th>
+          <th>Date Range</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="viewed-list"></tbody>
+    </table>
+
+    <div
+      class="offcanvas offcanvas-end"
+      tabindex="-1"
+      id="offcanvasRight"
+      aria-labelledby="offcanvasRightLabel"
+    >
+      <div class="offcanvas-header">
+        <h5 id="offcanvasRightLabel">Employee Detials</h5>
+        <button
+          type="button"
+          class="btn-close text-reset"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <table class="table table-hover table-inverse table-responsive">
+          <thead class="thead-inverse">
+            <tr>
+              <th>Total Days</th>
+              <th>On Time</th>
+              <th>Grace Time</th>
+              <th>Late</th>
+            </tr>
+          </thead>
+          <tbody id="empdatas"></tbody>
+        </table>
+      </div>
+    </div>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      $(function () {
+        $('input[name="datefilter"]').daterangepicker({
+          autoUpdateInput: false,
+          locale: {
+            cancelLabel: "Clear",
+          },
+        });
+
+        $('input[name="datefilter"]').on(
+          "apply.daterangepicker",
+          function (ev, picker) {
+            $(this).val(
+              picker.startDate.format("YYYY-MM-DD") +
+                " to " +
+                picker.endDate.format("YYYY-MM-DD")
+            );
+          }
+        );
+
+        $('input[name="datefilter"]').on(
+          "cancel.daterangepicker",
+          function (ev, picker) {
+            $(this).val("");
+          }
+        );
+      });
+      function getReport() {
+        var dates = String(startdate.value);
+        var date = dates.split(" to ");
+        var data = {
+          startDate: date[0],
+          endDate: date[1],
+        };
+        var settings = {
+          url: "http://app.sreesubh.in/api/Attendance/makeReportWeb",
+          method: "POST",
+          dataType: "json",
+          data: data,
+        };
+        var settings2 = {
+          url: "http://app.sreesubh.in/api/Holiday/getHolidayByWeb",
+          method: "POST",
+          dataType: "json",
+          data: data,
+        };
+        var settings3 = {
+          url: "http://app.sreesubh.in/api/Leave/getAllReportAcceptedByDate",
+          method: "POST",
+          dataType: "json",
+          data: data,
+        };
+
+        var settings4 = {
+          url: "http://app.sreesubh.in/api/Attendance/getWorkingDays",
+          method: "POST",
+          dataType: "json",
+          data: data,
+        };
+
+        $.ajax(settings)
+          .done(function (response) {
+            var table = "";
+            console.log(response);
+            response.map((item, pos) => {
+              table += `
+                  <tr id = "${item.EmployeeId}">
+                    <td>${item.employeeName}</td>
+                    <td>${item.totalRemarks}</td>
+                    <td>${Number(item.totalPercentage).toPrecision(5)}</td>
+                    <td>${item.onTimeRemarks}</td>
+                    <td>${Number(item.totalPercentage).toPrecision(5)}</td>
+                    <td><button
+                          class="btn btn-warning"
+                          type="button"
+                          data-bs-toggle="offcanvas"
+                          data-bs-target="#offcanvasRight"
+                          aria-controls="offcanvasRight"
+                          onclick="makeDetials(this)"
+                        >
+                          Check Detials
+                        </button>
+                        </td>
+
+                  </tr>
+                  `;
+            });
+            //   makeChart(dateList, workList);
+            $("#emptable").html(table);
+          })
+          .fail((resp) => {
+            console.log(resp);
+          });
+
+        $.ajax(settings3)
+          .done(function (response) {
+            var str = "";
+            response.map((item, index) => {
+              var dataset = `
+              <tr>
+                    <td scope="row">${item.employeeName}</td>
+                    <td>${
+                      item.leaveType == 1
+                        ? "Full Day"
+                        : item.leaveType == 2
+                        ? "First Shift"
+                        : "Last Shift"
+                    }</td>
+                    <td>${item.description}</td>
+                    <td>${item.startDate} to ${item.endDate}</td>
+                    <td>
+                      ${
+                        item.status == 1
+                          ? "APROVED"
+                          : item.status == 2
+                          ? "DECLINE"
+                          : "CANCELLED"
+                      }
+                    </td>
+                  </tr>
+              `;
+              str += dataset;
+            });
+            $("#viewed-list").html(str);
+          })
+          .fail((resp) => {
+            console.log(resp);
+          });
+
+        $.ajax(settings2)
+          .done(function (response) {
+            var table = "";
+            console.log(response);
+            response.map((item, pos) => {
+              table += `
+                  <tr>
+                    <td>${item.holidayName}</td>
+                    <td>${item.holidayDate}</td>
+                  </tr>
+                  `;
+            });
+            //   makeChart(dateList, workList);
+            $("#holidaytable").html(table);
+          })
+          .fail((resp) => {
+            console.log(resp);
+          });
+
+        $.ajax(settings4)
+          .done(function (response) {
+            $("#wdays").html(response.working);
+            $("#sundays").html(response.sundays);
+          })
+          .fail((resp) => {
+            console.log(resp);
+          });
+      }
+      function makeDetials(data) {
+        var cont = data.parentElement.parentElement;
+        // document.getElementById('..')
+        var id = cont.getAttribute("id");
+        console.log(id);
+        var dates = String(startdate.value);
+        var date = dates.split(" to ");
+        var data = {
+          EmployeeId: id,
+          startDate: date[0],
+          endDate: date[1],
+        };
+        var settings = {
+          url: "http://app.sreesubh.in/api/Attendance/generateRepoEmpWeb",
+          method: "POST",
+          dataType: "json",
+          data: data,
+        };
+        $.ajax(settings)
+          .done(function (response) {
+            console.log(response);
+            var empdatas = document.getElementById("empdatas");
+            var table = `<tr>
+              <td>${response.Total}</td>
+              <td>${response.countOnTime}</td>
+              <td>${response.countGraceTime}</td>
+              <td>${response.countLateTime}</td>
+            </tr>`;
+            empdatas.innerHTML = table;
+          })
+          .fail((resp) => {
+            console.log(resp);
+          });
+      }
+    </script>
+  </body>
+</html>
